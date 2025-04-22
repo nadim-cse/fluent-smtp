@@ -99,18 +99,17 @@
               {{ $t('Set maximum emails per day for each connection. Leave as 0 for unlimited.') }}</p>
 
             <el-form ref="limitsForm" :model="limitsForm" label-position="top">
-              <el-table :data="stats.connection_stats" style="width: 100%">
+              <el-table :data="stats.connection_stats">
                 <el-table-column :label="$t('Connection')" prop="title">
                   <template slot-scope="scope">
-                    <span v-if="isCurrentConnection(scope.row.id)" class="current-indicator">
-                      <i class="el-icon-arrow-right"></i>
-                    </span>
                     {{ scope.row.title }}
+                    <br>
+                    {{ scope.row.sender_email }}
                   </template>
                 </el-table-column>
                 <el-table-column :label="$t('Daily Limit')" prop="daily_limit" width="200">
                   <template slot-scope="scope">
-                    <el-form-item :prop="'limits.' + scope.row.id" class="mb-0">
+                    <el-form-item :prop="'limits.' + scope.row.id" class="mb-1">
                       <el-input-number
                           v-model="limitsForm.limits[scope.row.id]"
                           :min="0"
@@ -132,7 +131,6 @@
                         v-if="scope.row.daily_limit > 0"
                         :percentage="calculateDailyProgress(scope.row.today_count, scope.row.daily_limit)"
                         :show-text="false"
-                        :status="scope.row.limit_reached ? 'exception' : ''"
                         class="mt-1 daily-progress">
                     </el-progress>
                   </template>
@@ -155,14 +153,13 @@
               <span class="title">{{ $t('Connection Statistics') }}</span>
             </div>
           </div>
-          <div v-if="stats" class="el-card__body">
+          <div v-if="stats" class="el-card__body mt-1">
             <el-table :data="stats.connection_stats" style="width: 100%">
               <el-table-column :label="$t('Connection')" prop="title">
                 <template slot-scope="scope">
-                  <span v-if="isCurrentConnection(scope.row.id)" class="current-indicator">
-                    <i class="el-icon-arrow-right"></i>
-                  </span>
                   {{ scope.row.title }}
+                  <br>
+                  {{ scope.row.sender_email }}
                 </template>
               </el-table-column>
               <el-table-column :label="$t('Sender Email')" prop="sender_email"></el-table-column>
